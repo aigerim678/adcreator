@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container overflow-y-scroll overflow-x-hidden">
+        <div class="d-flex flex-column scenario-wrapper">
+            <div class="row flex-column flex-md-row flex-grow-1">
+                <div class="col-12 mb-3">
+                    <h1 class="title d-flex justify-content-center">
+                        <div class="title_arrow-start">
+                            /❋ <span>ШАГ 1: СЦЕНАРИЙ.</span> НАПИШИТЕ ТЕКСТ ОЗВУЧКИ
+                        </div>
+                    </h1>
+                </div>
+                <div class="col-12 col-md-8">
+                    <div class="scenario h-100">
+                        <div class="scenario__area h-100">
+                            <div class="scenario__item h-100">
+                                <h3 class="scenario__title">
+                                    Напишите свой сценарий:
+                                </h3>
+                                <form action="{% url 'write_script' %}" method="post">
+                                    {% csrf_token %}
+                                <div class="big-ai">
+                                    <textarea name="scenario_text" class="form-control ai__ctrl"></textarea>
+                                </div>
+                                <div class="d-flex justify-content-end d-none d-md-flex">
+                                    <button type="submit" class="button">ДАЛЕЕ →</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+                <div class="col-12 col-md-4">
+                    <div class="bot mb-3 mt-4 mt-md-0 mb-md-0 p-3 bot-answer">
+                        {% if variants %}
+                            <div class="bot__response">
+                                {% for variant in variants %}
+                                    <div class="bot__item">
+                                        <p>Вариант {{ forloop.counter }}</p>
+                                    </div>
+                                    {% for block in variant %}
+                                        <div class="bot__item">
+                                            <p>{{ block }}</p>
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                            <button id="retry-button" class="button button-small bot__button bot__button-new">Попробовать еще раз</button>
+                        {% elif error %}
+                        <div class="alert alert-danger mt-4">
+                            <p>{{ error }}</p>
+                        </div>
+                        {% else %}
+                        <div class="bot__content">
+                            <p class="bot__text text-center">
+                                <span>Нет идеи?</span>
+                                <br>
+                                Спросите у AI сцениариста
+                            </p>
+                            <div >
+                                <img class="bot__img" height="694" width="1037" alt="ai image" loading="lazy" fetchpriority="auto" src="{% static 'images/ai-image.png' %}">
+                            </div>
+                            <div class="bot__request">
+                                <form id="ask-ai-form" action="{% url 'generate_response' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="source" value="write_script">
+                                    <textarea id="user-message" name="user_message" class="form-control form-control-bot" rows="4" placeholder="История про работу автосервиса во время карантина...."></textarea>
+                                    <button type="submit" class="button button-filled w-100 mt-3 disabled">
+                                        Спросить Starmake AI
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}           
+                    </div>
+                </div>
+            </div>         
+        </div>
+    </div>
+    <script>
+        
+        const generateResponseUrl = "{% url 'generate_response' %}";  // Устанавливаем URL 
+    </script>  
+{% endblock %}

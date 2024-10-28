@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container overflow-y-scroll overflow-x-hidden">
+        <!-- Блок для вывода сообщения об ошибке -->
+        <div id="error-message" class="error-message d-none">
+            Пожалуйста, заполните все поля перед отправкой!
+        </div>
+        
+        <div class="d-flex flex-column scenario-wrapper">
+            <div class="row flex-column flex-md-row flex-grow-1">
+                <div class="col-12 mb-3">
+                    <h1 class="title d-flex justify-content-center">
+                        <div class="title_arrow-start">
+                            /❋ <span>ШАГ 1: СЦЕНАРИЙ.</span> НАПИШИТЕ ТЕКСТ ОЗВУЧКИ
+                        </div>
+                    </h1>
+                </div>
+                <div class="col-12 col-md-8 h-100">
+                    <div class="scenario">
+                        <form action="{% url 'use_template' %}" method="post">
+                            {% csrf_token %}
+                            <div class="scenario__area">
+                                <div class="scenario__item">
+                                    <h3 class="scenario__title">
+                                        Выберите громкое начало
+                                    </h3>
+                                    <div class="btn-group">
+                                        <div class="custom-dropdown">
+                                            <button type="button" class="dropdown-button">Выберите громкое начало</button>
+                                            <ul class="dropdown-list">
+                                                <li class="dropdown-item" data-value="1">Нам на это потребовалось 2 года, а ты узнаешь это за 30 секунд</li>
+                                                <li class="dropdown-item" data-value="2">90% людей допускают эту ошибку</li>
+                                                <li class="dropdown-item" data-value="3">Было ли у тебя такое, когда (ситуация из жизни). Что с этим делать?</li>
+                                                <li class="dropdown-item" data-value="4">Мы потратили на это более _____ денег за последний год, чтобы ты смог...</li>
+                                                <li class="dropdown-item" data-value="5">Для всех у кого есть проьлемы в _____ вот что нужно делать</li>
+                                                <li class="dropdown-item" data-value="6">Благодаря этой вещи, у меня наконец-то _______</li>
+                                                <li class="dropdown-item" data-value="7">ТОП-5 причин, почему вам нужно ______</li>
+                                                <li class="dropdown-item" data-value="8">Мы раньше такого никогда не делали...</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="ai">
+                                        <textarea name="loud_start" class="form-control ai__ctrl" rows="4"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="scenario__item">
+                                    <h3 class="scenario__title">
+                                        Выберите усилитель для текста
+                                    </h3>
+                                    <div class="btn-group">
+                                        <div class="custom-dropdown">
+                                            <button type="button" class="dropdown-button">Выберите усилитель для текста</button>
+                                            <ul class="dropdown-list">
+                                                <li class="dropdown-item" data-value="1">Хватит это терпеть___</li>
+                                                <li class="dropdown-item" data-value="2">Мы готовилисб к этому два года___</li>
+                                                <li class="dropdown-item" data-value="3">Теперь расскажу как это исправить___</li>
+                                                <li class="dropdown-item" data-value="4">Чтобы решить эти проблемы, смотрите видео до конца___</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="ai">
+                                        <textarea name="text_amplifier" class="form-control ai__ctrl" rows="4"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="scenario__item">
+                                    <h3 class="scenario__title">
+                                        Расскажите ваш основной текст
+                                    </h3>
+                                    <div class="ai">
+                                        <textarea name="main_text" class="form-control ai__ctrl" rows="4"></textarea>
+                                    </div>
+                                </div>
+                                <div class="scenario__item pb-4">
+                                    <h3 class="scenario__title">
+                                        Призыв к действию
+                                    </h3>
+                                    <div class="ai">
+                                        <textarea name="call_to_action" class="form-control ai__ctrl" rows="4" placeholder="Пример: Ставь лайк, подписывайся в инстаграм."></textarea>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-end d-none d-md-flex">
+                                    <button type="submit" class="button">ДАЛЕЕ →</button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="col-12 col-md-4">
+                    <div class="bot mb-3 mt-4 mt-md-0 mb-md-0 p-3 bot-answer">
+                        {% if variants %}
+                            <div class="bot__response">
+                                {% for variant in variants %}
+                                    <div class="bot__item">
+                                        <p>Вариант {{ forloop.counter }}</p>
+                                    </div>
+                                    {% for block in variant %}
+                                        <div class="bot__item">
+                                            <p>{{ block }}</p>
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                            <button id="retry-button" class="button button-small bot__button bot__button-new">Попробовать еще раз</button>
+                        {% elif error %}
+                        <div class="alert alert-danger mt-4">
+                            <p>{{ error }}</p>
+                        </div>
+                        {% else %}
+                        <div class="bot__content">
+                            <p class="bot__text text-center">
+                                <span>Нет идеи?</span>
+                                <br>
+                                Спросите у AI сцениариста
+                            </p>
+                            <div >
+                                <img class="bot__img" height="694" width="1037" alt="ai image" loading="lazy" fetchpriority="auto" src="{% static 'images/ai-image.png' %}">
+                            </div>
+                            <div class="bot__request">
+                                <form id="ask-ai-form" action="{% url 'generate_response' %}" method="post">
+                                    <input type="hidden" name="source" value="use_template">
+                                    {% csrf_token %}
+                                    <textarea id="user-message" name="user_message" class="form-control form-control-bot" rows="4" placeholder="История про работу автосервиса во время карантина...."></textarea>
+                                    <button type="submit" class="button button-filled w-100 mt-3 disabled">
+                                        Спросить Starmake AI
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}           
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        const generateResponseUrl = "{% url 'generate_response' %}";  // Устанавливаем URL 
+    </script> 
+{% endblock %}

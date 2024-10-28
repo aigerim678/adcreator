@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container overflow-y-scroll overflow-x-hidden full-screen h-100">
+        <div class="row h-100">
+            <div class="col-12 col-md-8 d-flex flex-column h-100">
+                <h1 class="title">
+                    <div class="title_arrow-end d-flex justify-content-center justify-content-md-start">
+                        /❋ <span>ЗАГРУЗИТЕ СВОЕ АУДИО,</span>
+                    </div>
+                    <div class="d-flex justify-content-md-start ms-0 ms-md-5 text-left d-flex-nowrap">
+                        ЛИБО ЗАПИШИТЕ ГОЛОС ПО ВАШЕМУ СЦЕНАРИЮ
+                    </div>
+                </h1>
+                <div class="d-flex flex-column justify-content-end justify-content-md-center gap-3 mt-auto my-md-auto h-100">
+                    <p class="text text-center">Ваше аудио будет закреплено для <span>озвучки вашего AI аватара</span></p>
+                    
+                    <input type="file" id="audioUpload" name="file" accept="audio/*" style="display: none;" onchange="uploadAudio()">
+
+                    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+                    <button id="uploadButton" class="button button-filled button-lg w-100" onclick="document.getElementById('audioUpload').click();">
+                        <img width="32" height="32" src="{% static 'images/valume.png' %}" alt="Upload Icon"> ЗАГРУЗИТЬ АУДИО
+                    </button>
+                    
+                    <!-- Кнопка для начала записи -->
+                    <button id="startRecordButton" class="button button-filled button-lg w-100" onclick="showRecordingControls()">
+                        <img width="32" height="32" src="{% static 'images/microphone.png' %}" alt="Record Icon"> ЗАПИСАТЬ ГОЛОС
+                    </button>
+
+
+
+                    <!-- Панель управления записью -->
+                    <div id="recordingControls" style="display: none;" class="justify-content-center gap-3">
+                        <button class="button button-filled" onclick="returnBack()">Назад</button>
+                        <button onclick="startRecording()" class="button button-filled" id="recordButton">
+                            <i class="fa fa-microphone"></i>
+                        </button>
+                        <button onclick="pauseRecording()" class="button button-filled" id="pauseButton">
+                            <i class="fa fa-pause"></i>
+                        </button>
+                        <button onclick="resumeRecording()" class="button btn-red" id="resumeButton" style="display: none;">
+                            <i class="fa fa-play"></i>
+                        </button>
+                        <button onclick="stopRecording()" class="button button-filled" id="stopButton">
+                            <i class="fa fa-stop"></i>
+                        </button>
+                        <button onclick="saveRecording()" class="button button-filled disabled">Сохранить</button>
+                        
+                    </div>
+
+                    <div class="d-none d-md-block">
+                        <p  class="loading" id="recordingStatus" style="display: none;">Запись идет...</p>
+                    </div>
+                    
+
+                    <div id="uploadAudioSuccessMessage" style="display: none;" class="flex-column justify-content-center align-items-center gap-3">
+                        <p class "text">Аудио дорожка добавлена!</p>
+                    </div>
+
+                    <p class="text border-blue text-center p-4 py-md-4">
+                        Не знаете о чем хотите создать видео REELS?<br>
+                        <a href="{% url 'script_builder' %}" class="link"><span>Используйте наш конструктор сценария</span></a>
+                    </p>
+                </div>
+                <img class="step-2-img" alt="" height="1599" width="1200" loading="lazy" fetchpriority="auto" src={% static 'images/step-2-img.png' %}>
+            </div> 
+        </div>
+        
+    </div>
+
+    <script>
+        const uploadAudioUrl = "{% url 'record' %}";  // Устанавливаем URL для загрузки аудио
+        const uploadVideoUrl = "{% url 'video_step' %}";  // Устанавливаем URL для загрузки аудио
+    </script>
+{% endblock %}

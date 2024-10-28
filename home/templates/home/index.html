@@ -1,0 +1,48 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container overflow-y-scroll oveflow-x-hidden">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <h1 class="title d-flex flex-column justify-content-center align-items-center">
+                    <div class="title_arrow-start">
+                        <span>/❋</span> ПОСМОТРИТЕ <span>ВИДЕО 50 СЕК</span>
+                    </div>
+                    <div class="ms-md-auto">
+                        КАК СОЗДАТЬ <span>СВОЕГО КЛОНА</span> ❋/
+                    </div>  
+                </h1>
+            </div> 
+            
+            <div class="col-12 col-md-4">
+                <div class="video-section">
+                    <iframe 
+                        width="177" 
+                        height="315" 
+                        src="https://www.youtube.com/embed/neQI9n8s-Gw?" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+            <div class="col-10 col-md-8 d-flex flex-column justify-content-center ">
+                <div class="form form-onboarding d-flex flex-column gap-4 border-gray ">
+                    <form method="post" action="{% url 'home' %}" >
+                        {% csrf_token %}
+                        <div class="form-check">
+                            <input id="watched" class="form-check-input" type="checkbox" name="watched">
+                            <label class="form-check-label text" for="watched">
+                                <span>Я посмотрел видео.</span> Теперь я знаю, как создать видео
+                            </label>
+                        </div>
+                        <button type="submit" class="submit-button button button-disabled" disabled>ДАЛЕЕ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+{% endblock %}

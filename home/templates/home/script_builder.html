@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container overflow-y-scroll overflow-x-hidden full-screen h-100">
+        <div class="d-flex flex-column h-100">
+            <div class="row">
+                <div class="col">
+                    <h1 class="title d-flex justify-content-end"> 
+                        <div class="title_arrow-start">
+                            <span>/❋</span> ВЫБЕРИТЕ СВОЙ ВАРИАНТ <span>РАЗВИТИЯ</span> ❋/
+                        </div>
+                    </h1>
+                </div>
+            </div>      
+            <div class="row flex-grow-1 gap-4 gap-md-0">
+                <div class="col-12 col-md-6 d-flex flex-column justify-content-center">
+                    <a class="h-100 option" href="{% url 'write_script' %}" class="text-decoration-none">
+                        <div class="cell">
+                            <img class="cell_img" width="969" height="1002" src="{% static 'images/head-left.png' %}" alt="Create from Scratch">
+                            <h2 class="cell_title">СОЗДАТЬ СЦЕНАРИЙ С ПУСТОГО ЛИСТА</h2>
+                            <p class="text">Напишите текст озвучки вручную</p>
+                        </div>
+                    </a>
+            
+                </div>
+                <div class="col-12 col-md-6 d-flex flex-column justify-content-center">
+                    <a class="h-100 option" href="{% url 'use_template' %}" class="text-decoration-none">
+                        <div class="cell">
+                            <img class="cell_img" width="969" height="1002" src="{% static 'images/head-3.png' %}" alt="Create from Scratch">
+                            <h2 class="cell_title">ИСПОЛЬЗОВАТЬ ШАБЛОНЫ</h2>
+                            <p class="text">Собрать сценарий с помощью готового конструктора</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
